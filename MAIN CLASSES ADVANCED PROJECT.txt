@@ -4,7 +4,7 @@ BLOCK
 ATTRIBUTES:
 	-NAME ---> string name;
 	-SID -----> int SID;
-	-POSITION ----> double[] position;
+	-POSITION ----> double[4] position;
 	-ZORDER ------> int Zorder;
 -----SUB-CLASSES----------
 SUM
