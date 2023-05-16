@@ -1,0 +1,17 @@
+-----PARENT CLASS---------
+ABSTRACT
+BLOCK
+ATTRIBUTES:
+	-NAME ---> string name;
+	-SID -----> int SID;
+	-POSITION ----> double[] position;
+	-ZORDER ------> int Zorder;
+-----SUB-CLASSES----------
+SUM
+CONSTANT
+SATURATE
+SCOPE
+UNIT DELAY
+LINE
+BRANCH
+-----------------------------
