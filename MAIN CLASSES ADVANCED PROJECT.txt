@@ -1,17 +1,17 @@
 -----PARENT CLASS---------
 ABSTRACT
-Block
+Block (Ahmad)
 ATTRIBUTES:
 	-NAME ---> string name;
 	-SID -----> int SID;
 	-POSITION ----> double[4] position;
 	-ZORDER ------> int Zorder;
 -----SUB-CLASSES----------
-Sum
-Constant
-Saturate
-Scope
-UnitDelay
-Line
-Branch
+Sum (Ahmad)
+Constant (Magdy)
+Saturate (Magdy)
+Scope (Mohammed)
+UnitDelay (Mazen)
+Line (Mohammed)
+Branch (Mazen)
 -----------------------------
