@@ -1,17 +1,17 @@
 -----PARENT CLASS---------
 ABSTRACT
-BLOCK
+Block
 ATTRIBUTES:
 	-NAME ---> string name;
 	-SID -----> int SID;
 	-POSITION ----> double[4] position;
 	-ZORDER ------> int Zorder;
 -----SUB-CLASSES----------
-SUM
-CONSTANT
-SATURATE
-SCOPE
-UNIT DELAY
-LINE
-BRANCH
+Sum
+Constant
+Saturate
+Scope
+UnitDelay
+Line
+Branch
 -----------------------------
