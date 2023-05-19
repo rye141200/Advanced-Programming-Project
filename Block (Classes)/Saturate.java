@@ -12,8 +12,8 @@ package advanced.programming.project;
 
    private double position [];
 
-    public Saturate(double[] posit) {
-        super("saturation",1,posit,1);
+     public Saturate(String name, int SID, double[] posit, int Zorder) {
+        super(name,SID,posit,Zorder);
     }
 
     public double[] getPosition() {
