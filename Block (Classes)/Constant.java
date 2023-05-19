@@ -8,8 +8,8 @@ public class Constant extends Block{
 
    private double position [];
 
-    public Constant(double[] posit) {
-        super("constant",5,posit,5);
+    public Constant(String name, int SID, double[] posit, int Zorder) {
+        super(name,SID,posit,Zorder);
     }
 
     public double[] getPosition() {
