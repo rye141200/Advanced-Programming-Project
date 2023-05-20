@@ -8,6 +8,12 @@ package advanced.programming.project;
  *
  * @author hp
  */
-public class Scope {
+public class Scope extends Block {
+    public Scope()
+    {}
+    
+    public Scope(String name, int SID, double[] posit, int Zorder) {
+        super(name,SID,posit,Zorder);
+    }
     
 }
