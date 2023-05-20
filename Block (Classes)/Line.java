@@ -6,8 +6,16 @@ package advanced.programming.project;
 
 /**
  *
- * @author hp
+ * @author mohamed mostafa 
  */
-public class Line {
+public class Line extends Block {
+
+    public Line() {
+    }
+    public ( int SID_1 , int SID_2 , String dis , String src  )
+    {
+    
+    
+    }
     
 }
