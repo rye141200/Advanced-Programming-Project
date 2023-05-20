@@ -1,0 +1,43 @@
+  public String name_extraction(String line){
+           String [] name_arr = line.split(" ");
+           //NAME EXTRACTION
+           int name_index = name_arr[2].indexOf("\"");
+           return name_arr[2].substring(name_index,name_arr[2].length()-1);
+    }
+    public int SID_extraction(String line){
+           String [] SID_arr = line.split(" ");
+           //SID EXTRACTION
+           int sid_index = SID_arr[3].indexOf("\"");
+           return Integer.parseInt(SID_arr[3].substring(sid_index+1,sid_index+2));
+    }
+    public double[] ports_extraction(String line){
+        String[] ports_arr = line.split(">");
+        int ports_end = ports_arr[1].indexOf("]");
+        String ports_str = ports_arr[1].substring(1,ports_end-1);
+        if (line.length() == 23){
+         double[] ports = {Double.parseDouble(ports_str),};
+         return ports;
+        }
+        else{
+        ports_arr = ports_str.split(",");
+                //ports_Sum
+        double[] ports = {Double.parseDouble(ports_arr[0]),Double.parseDouble(ports_arr[1])};
+        return ports;
+        }
+    } 
+    public double[] position_extraction(String line){
+        String[] position_arr = line.split(">");
+        String position_str = position_arr[1].substring(0, position_arr[1].length() -3);
+        position_str = position_str.substring(1,position_str.length()-1);
+        String[] position_arr2 = position_str.split(",");
+        double[] position = {Double.parseDouble(position_arr2[0]),Double.parseDouble(position_arr2[1]),Double.parseDouble(position_arr2[2]),Double.parseDouble(position_arr2[3])};
+        return position;
+    }
+    public int Zorder_extraction(String line){
+        String Zorder_str = line.replaceAll("\\D+", "");
+        return Integer.parseInt(Zorder_str);
+    }
+    public String IconShape_Inputs_extraction(String line){
+        String[] arr = line.split(">");
+        return arr[1].substring(0,arr[1].length()-3);
+    } 
