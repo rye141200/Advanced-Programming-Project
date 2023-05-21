@@ -7,15 +7,127 @@ package advanced.programming.project;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+import javafx.application.Application;
+import javafx.scene.*;
+import javafx.stage.*;
+import javafx.stage.Stage;
+import javafx.scene.control.Button;
+import javafx.geometry.*;
+import javafx.scene.text.Text;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.*;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Line;
 /**
  *
  * @author hp
  */
-public class main_test {
-    public static void main(String[] args) throws Exception{
-        //GETTING FILE USEFUL CONTENT
-        System.out.println("Hello world");
+public class main_test extends Application {
+    @Override
+    public void start(Stage primaryStage) throws Exception{
+        ArrayList<Block> Blocks_Array = ParseBlocks();
+        ArrayList<LineBlock> Lines_Array = ParseLines();
+        ArrayList<Branch> Branch_Array = ParseBranches();
+        //CREATING BLOCKS
+        Pane pane = new Pane();
+        
+        for(Block block:Blocks_Array){
+            if(block instanceof Constant){
+             //CONSTANT BLOCK GUI
+             double[] X_Y_CONSTANT = block.getPosition();
+             Rectangle CONSTANT_BLOCK = new Rectangle(X_Y_CONSTANT[0],X_Y_CONSTANT[1],40,40);
+             CONSTANT_BLOCK.setFill(Color.WHITE);
+             CONSTANT_BLOCK.setStroke(Color.BLUE);
+             pane.getChildren().add(CONSTANT_BLOCK);
+             Text CONSTANT_TEXT = new Text("Constant");
+             CONSTANT_TEXT.setX(X_Y_CONSTANT[0]);
+             CONSTANT_TEXT.setY(X_Y_CONSTANT[1]+50);
+             pane.getChildren().add(CONSTANT_TEXT);
+            }
+            if(block instanceof Saturate){
+             //SATURATE BLOCK GUI
+             double[] X_Y_SATURATE = block.getPosition();
+             Rectangle SATURATE_BLOCK = new Rectangle(X_Y_SATURATE[0],X_Y_SATURATE[1],40,40);
+             SATURATE_BLOCK.setFill(Color.WHITE);
+             SATURATE_BLOCK.setStroke(Color.BLUE);
+             pane.getChildren().add(SATURATE_BLOCK);
+             Text SATURATE_TEXT = new Text("Saturation");
+             SATURATE_TEXT.setX(X_Y_SATURATE[0]);
+             SATURATE_TEXT.setY(X_Y_SATURATE[1]+50);
+             pane.getChildren().add(SATURATE_TEXT);
+            }
+            if(block instanceof Sum){
+              //SUM BLOCK GUI
+             double[] X_Y_CONSTANT = block.getPosition();
+             Rectangle CONSTANT_BLOCK = new Rectangle(X_Y_CONSTANT[0],X_Y_CONSTANT[1],40,40);
+             CONSTANT_BLOCK.setFill(Color.WHITE);
+             CONSTANT_BLOCK.setStroke(Color.BLUE);
+             pane.getChildren().add(CONSTANT_BLOCK);
+             Text CONSTANT_TEXT = new Text("Add");
+             CONSTANT_TEXT.setX(X_Y_CONSTANT[0]);
+             CONSTANT_TEXT.setY(X_Y_CONSTANT[1]+50);
+             pane.getChildren().add(CONSTANT_TEXT);
+            }
+            if(block instanceof Scope){
+              //SCOPE BLOCK GUI
+             double[] X_Y_CONSTANT = block.getPosition();
+             Rectangle CONSTANT_BLOCK = new Rectangle(X_Y_CONSTANT[0],X_Y_CONSTANT[1],40,40);
+             CONSTANT_BLOCK.setFill(Color.WHITE);
+             CONSTANT_BLOCK.setStroke(Color.BLUE);
+             pane.getChildren().add(CONSTANT_BLOCK);
+             Text CONSTANT_TEXT = new Text("Scope");
+             CONSTANT_TEXT.setX(X_Y_CONSTANT[0]);
+             CONSTANT_TEXT.setY(X_Y_CONSTANT[1]+50);
+             pane.getChildren().add(CONSTANT_TEXT);
+            }
+            if(block instanceof UnitDelay){
+              //UNITDELAY BLOCK GUI
+             double[] X_Y_CONSTANT = block.getPosition();
+             Rectangle CONSTANT_BLOCK = new Rectangle(X_Y_CONSTANT[0],X_Y_CONSTANT[1],40,40);
+             CONSTANT_BLOCK.setFill(Color.WHITE);
+             CONSTANT_BLOCK.setStroke(Color.BLUE);
+             pane.getChildren().add(CONSTANT_BLOCK);
+             Text CONSTANT_TEXT = new Text("Unit Delay");
+             CONSTANT_TEXT.setX(X_Y_CONSTANT[0]);
+             CONSTANT_TEXT.setY(X_Y_CONSTANT[1]+50);
+             pane.getChildren().add(CONSTANT_TEXT);
+            }
+        }
+        
+        //LINES GUI 
+        double[] START_POSITION=null;
+        double[] END_POSITION=null;
+        boolean Start_flag = false;
+        boolean End_flag = false;
+        int line_counter=0;
+        for(LineBlock test_line:Lines_Array){
+            for(Block test_block:Blocks_Array){
+                //NORMAL LINES
+                if (test_line.getSrcSID() == test_block.getSID() && test_line.getHasBranch() == false && test_line.HasDst == true)
+                {
+                    Start_flag = true;
+                    START_POSITION = test_block.getPosition();
+                }
+                if(test_line.getDstSID() == test_block.getSID() &&test_line.getHasBranch() == false && test_line.HasDst == true){
+                    End_flag = true;
+                    END_POSITION = test_block.getPosition();
+                }
+                if(Start_flag == true && End_flag == true && test_line.HasDst == true){
+                    Line NormalLine = new Line(START_POSITION[0]+40,START_POSITION[1]+25,END_POSITION[0],END_POSITION[1]+25);
+                    line_counter++;
+                    System.out.println(line_counter);
+                    pane.getChildren().add(NormalLine);
+                }
+            }
+        }
+        Scene scene = new Scene(pane,1200,800);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+    //DONT TOUCH THESE METHODS!!!!
+    public static ArrayList<String> File_Reader() throws Exception{
         File file = new File("C:\\Users\\hp\\OneDrive\\Desktop\\Advanced Programming project\\Example.mdl");
         Scanner input = new Scanner(file);
         ArrayList<String> lines = new ArrayList<String>();
@@ -33,6 +145,215 @@ public class main_test {
                 if(added_line.matches("</System>"))
                    useful_text = false;
             }
+        return lines;
+    }
+    public static ArrayList<LineBlock> ParseLines() throws Exception{
+        ArrayList<String> lines = File_Reader();
+        //LINE VARIABLES
+        int Zorder_Line=0;
+        String Src_Line=null;
+        String Dst_Line=null;
+        double[] points_Line=null;
+        boolean Dst_Flag_Line = false;
+        boolean Points_Flag_Line = false;
+        ArrayList<LineBlock> Line_Array = new ArrayList<>();
+        
+        //BRANCH VARIABLES
+        int Zorder_Branch=0;
+        String Dst_Branch=null;
+        double[] points_Branch=null;
+        boolean Points_Flag_Branch = false;
+        ArrayList<Branch> Branch_Array = new ArrayList<>();
+        //ArrayLists for lines and branches
+        boolean branch_flag = false;
+        boolean line_flag = false;
+        boolean HasBranchWithinLine=false;
+        for(String line:lines){
+            ////////////////////////////////////////////////////////////////////////////
+            ///////////////Line BLOCK/////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            if(line.matches(".*<Line>.*"))
+            {
+                line_flag = true;
+            }
+            if(line.matches(".*<Branch>.*") && line_flag == true){
+                line_flag = false;
+                HasBranchWithinLine = true;
+            }
+            if(line.matches(".*\"ZOrder\".*") && line_flag == true)
+            {
+                Zorder_Line = Zorder_extraction(line);
+            }
+            if(line.matches(".*\"Src\".*") && line_flag == true){
+                Src_Line = Src_Dst_extraction(line);
+            }
+            if(line.matches(".*\"Dst\".*") && line_flag == true){
+                Dst_Line = Src_Dst_extraction(line);
+                Dst_Flag_Line = true;
+            }
+            if(line.matches(".*\"Points\".*") && line_flag == true){
+                points_Line = Points_extraction(line);
+                Points_Flag_Line = true;
+            }
+            if(line_flag == false && branch_flag == true && line.matches(".*</Branch>.*"))
+            {
+                line_flag = true;
+                HasBranchWithinLine = true;
+            }
+            if(line.matches(".*</Line>.*") && line_flag == true)
+            {
+                line_flag = false;
+                //OBJECT DECLARATION THEN APPEND TO ArrayList<Line> !!
+                if(Points_Flag_Line == true && Dst_Flag_Line == true){
+                    Line_Array.add(new LineBlock(Zorder_Line,Src_Line,Dst_Line,points_Line,HasBranchWithinLine));
+                }
+                else if(Dst_Flag_Line == true && Points_Flag_Line == false){
+                    Line_Array.add(new LineBlock(Zorder_Line,Src_Line,Dst_Line,HasBranchWithinLine));
+                }
+                else if(Points_Flag_Line == true && Dst_Flag_Line == false){
+                    Line_Array.add(new LineBlock(Zorder_Line,Src_Line,points_Line,HasBranchWithinLine));
+                }
+                Points_Flag_Line = false;
+                Dst_Flag_Line = false;
+                HasBranchWithinLine = false;
+            }
+              ////////////////////////////////////////////////////////////////////////////
+            ///////////////Branch BLOCK/////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            if(line.matches(".*<Branch>.*"))
+            {
+                branch_flag = true;
+            }
+            if(line.matches(".*\"Points\".*") && branch_flag == true){
+                points_Branch = Points_extraction(line);
+                Points_Flag_Branch = true;
+            }
+            if(line.matches(".*\"Dst\".*") && branch_flag == true){
+                Dst_Branch = Src_Dst_extraction(line);
+            }
+            if(line.matches(".*\"ZOrder\".*") && branch_flag == true)
+            {
+                Zorder_Branch = Zorder_extraction(line);
+            }
+            if(line.matches(".*</Branch>.*")){
+                branch_flag = false;
+                //OBJECT DECLARATION THEN APPEND TO ArrayList<Branch>
+                if(Points_Flag_Branch == true){
+                    Branch_Array.add(new Branch(Zorder_Branch,points_Branch,Dst_Branch));
+                }
+                else
+                {
+                    Branch_Array.add(new Branch(Dst_Branch,Zorder_Branch));
+                }
+                Points_Flag_Branch = false;
+            }
+    }
+        return Line_Array;
+ }
+     public static ArrayList<Branch> ParseBranches() throws Exception{
+        ArrayList<String> lines = File_Reader();
+        //LINE VARIABLES
+        int Zorder_Line=0;
+        String Src_Line=null;
+        String Dst_Line=null;
+        double[] points_Line=null;
+        boolean Dst_Flag_Line = false;
+        boolean Points_Flag_Line = false;
+        ArrayList<Line> Line_Array = new ArrayList<>();
+        
+        //BRANCH VARIABLES
+        int Zorder_Branch=0;
+        String Dst_Branch=null;
+        double[] points_Branch=null;
+        boolean Points_Flag_Branch = false;
+        ArrayList<Branch> Branch_Array = new ArrayList<>();
+        //ArrayLists for lines and branches
+        boolean branch_flag = false;
+        boolean line_flag = false;
+        boolean HasBranchWithinLine = false;
+        for(String line:lines){
+            ////////////////////////////////////////////////////////////////////////////
+            ///////////////Line BLOCK/////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            /*if(line.matches(".*<Line>.*"))
+            {
+                line_flag = true;
+            }
+            if(line.matches(".*\"ZOrder\".*") && line_flag == true)
+            {
+                Zorder_Line = Zorder_extraction(line);
+            }
+            if(line.matches(".*\"Src\".*") && line_flag == true){
+                Src_Line = Src_Dst_extraction(line);
+            }
+            if(line.matches(".*\"Dst\".*") && line_flag == true){
+                Dst_Line = Src_Dst_extraction(line);
+                Dst_Flag_Line = true;
+            }
+            if(line.matches(".*\"Points\".*") && line_flag == true){
+                points_Line = Points_extraction(line);
+                Points_Flag_Line = true;
+            }
+            if(line.matches(".*\"<Branch>\".*") && line_flag == true){
+                line_flag = false;
+            }
+            if(line_flag == false && branch_flag == true && line.matches(".*\"</Branch>\".*"))
+            {
+                line_flag = true;
+            }
+            if(line.matches(".*</Line>.*") && line_flag == true)
+            {
+                line_flag = false;
+                //OBJECT DECLARATION THEN APPEND TO ArrayList<Line> !!
+                if(Points_Flag_Line == true && Dst_Flag_Line == true){
+                    Line_Array.add(new Line(Zorder_Line,Src_Line,Dst_Line,points_Line,HasBranchWithinLine));
+                }
+                else if(Dst_Flag_Line == true && Points_Flag_Line == false){
+                    Line_Array.add(new Line(Zorder_Line,Src_Line,Dst_Line));
+                }
+                else if(Points_Flag_Line == true && Dst_Flag_Line == false){
+                    Line_Array.add(new Line(Zorder_Line,Src_Line,points_Line));
+                }
+                Points_Flag_Line = false;
+                Dst_Flag_Line = false;
+                
+            }*/
+            ////////////////////////////////////////////////////////////////////////////
+            ///////////////Branch BLOCK/////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            if(line.matches(".*<Branch>.*"))
+            {
+                branch_flag = true;
+            }
+            if(line.matches(".*\"Points\".*") && branch_flag == true){
+                points_Branch = Points_extraction(line);
+                Points_Flag_Branch = true;
+            }
+            if(line.matches(".*\"Dst\".*") && branch_flag == true){
+                Dst_Branch = Src_Dst_extraction(line);
+            }
+            if(line.matches(".*\"ZOrder\".*") && branch_flag == true)
+            {
+                Zorder_Branch = Zorder_extraction(line);
+            }
+            if(line.matches(".*</Branch>.*")){
+                branch_flag = false;
+                //OBJECT DECLARATION THEN APPEND TO ArrayList<Branch>
+                if(Points_Flag_Branch == true){
+                    Branch_Array.add(new Branch(Zorder_Branch,points_Branch,Dst_Branch));
+                }
+                else
+                {
+                    Branch_Array.add(new Branch(Dst_Branch,Zorder_Branch));
+                }
+                Points_Flag_Branch = false;
+            }
+        }
+        return Branch_Array;
+    }
+    public static ArrayList<Block> ParseBlocks() throws Exception{
+        //GETTING FILE USEFUL CONTENT
+        ArrayList<String> lines = File_Reader();
         //VALID
         //Getting all attributes in, looping:
         //Useful flags for parsing, disables parsing attributes which aren't meant for a specific object 
@@ -91,15 +412,14 @@ public class main_test {
         double[] points_Line=null;
         boolean Dst_Flag_Line = false;
         boolean Points_Flag_Line = false;
-        ArrayList<Line> Line_Array = new ArrayList<Line>();
+        ArrayList<Line> Line_Array = new ArrayList<>();
         
         //BRANCH VARIABLES
         int Zorder_Branch=0;
         String Dst_Branch=null;
         double[] points_Branch=null;
         boolean Points_Flag_Branch = false;
-        ArrayList<Branch> Branch_Array = new ArrayList<Branch>();
-        
+        ArrayList<Branch> Branch_Array = new ArrayList<>();
         //ArrayLists for lines and branches
         for(String line : lines){
             
@@ -239,7 +559,7 @@ public class main_test {
             ////////////////////////////////////////////////////////////////////////////
             ///////////////Line BLOCK/////////////////////////////////////////////////
             ///////////////////////////////////////////////////////////////////////////
-            if(line.matches(".*<Line>.*"))
+            /*if(line.matches(".*<Line>.*"))
             {
                 line_flag = true;
             }
@@ -311,15 +631,23 @@ public class main_test {
                     Branch_Array.add(new Branch(Dst_Branch,Zorder_Branch));
                 }
                 Points_Flag_Branch = false;
-            }
+            }*/
         }
         //BLOCKS INITILIZATION 
         Sum sum = new Sum(name_Sum, position_Sum, Zorder_Sum, SID_Sum, ports_Sum, IconShape_Sum, Inputs_Sum);
         Constant constant = new Constant(name_Constant, SID_Constant, position_Constant, Zorder_Constant);
         UnitDelay unitdelay = new UnitDelay(name_UnitDelay, SID_UnitDelay, position_UnitDelay, Zorder_UnitDelay, BlockMirror_UnitDelay, SampleTime_UnitDelay, HasFrameUpgradeWarning_UnitDelay);
-        Scope scope = new Scope(name_Scope, SID_Scope, ports_Scope, Zorder_Scope, ScopeSpecificationString, NumInputPorts, Floating);
+        Scope scope = new Scope(name_Scope, SID_Scope, position_Scope, Zorder_Scope, ScopeSpecificationString, NumInputPorts, Floating);
         Saturate saturate = new Saturate(name_Saturate, SID_Saturate, position_Saturate, Zorder_Saturate);
-        sum.print();
+        ArrayList<Block> Blocks_Array = new ArrayList<>();
+        Blocks_Array.add(sum);
+        Blocks_Array.add(constant);
+        Blocks_Array.add(unitdelay);
+        Blocks_Array.add(scope);
+        Blocks_Array.add(saturate);
+        return Blocks_Array;
+        //TEST
+        /*sum.print();
         System.out.println("--------END SUM--------");
         constant.print();
         System.out.println("--------CONSTANT END--------");
@@ -340,7 +668,30 @@ public class main_test {
             test_branch.print();
             branch_counter ++;
             System.out.println("--------Branch:"+branch_counter+"----------");
+        }*/
+    }
+    
+    public static void main(String[] args) throws Exception{
+        ArrayList<Block> Blocks_Array = ParseBlocks();
+        ArrayList<LineBlock> Lines_Array = ParseLines();
+        ArrayList<Branch> Branch_Array = ParseBranches();
+        for(Block block:Blocks_Array){
+            block.print();
+            System.out.println("----------------------");
         }
+        int line_count = 0;
+        for(LineBlock line:Lines_Array){
+            line.print();
+            line_count ++;
+            System.out.println("---------LINE: "+line_count);
+        }
+        int branch_count =0;
+        for(Branch branch:Branch_Array){
+            branch.print();
+            branch_count++;
+            System.out.println("----------Branch:"+branch_count);
+        }
+        Application.launch();
     }
     /////////////////////////////////////////////////////
     //////////////////EXTRACTION METHODS/////////////////
