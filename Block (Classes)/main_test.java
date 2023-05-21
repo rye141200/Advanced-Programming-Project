@@ -99,10 +99,10 @@ public class main_test extends Application {
         //LINES GUI 
         double[] START_POSITION=null;
         double[] END_POSITION=null;
-        boolean Start_flag = false;
-        boolean End_flag = false;
         int line_counter=0;
         for(LineBlock test_line:Lines_Array){
+              boolean Start_flag = false;
+              boolean End_flag = false;
             for(Block test_block:Blocks_Array){
                 //NORMAL LINES
                 if (test_line.getSrcSID() == test_block.getSID() && test_line.getHasBranch() == false && test_line.HasDst == true)
@@ -114,14 +114,38 @@ public class main_test extends Application {
                     End_flag = true;
                     END_POSITION = test_block.getPosition();
                 }
-                if(Start_flag == true && End_flag == true && test_line.HasDst == true){
-                    Line NormalLine = new Line(START_POSITION[0]+40,START_POSITION[1]+25,END_POSITION[0],END_POSITION[1]+25);
+                if(Start_flag == true && End_flag == true && test_line.HasDst == true && test_line.HasPoints == false){
+                    Line NormalLine = new Line(START_POSITION[0]+40,START_POSITION[1]+20,END_POSITION[0],END_POSITION[1]+20);
                     line_counter++;
                     System.out.println(line_counter);
                     pane.getChildren().add(NormalLine);
                 }
+                if(Start_flag == true && End_flag == true && test_line.HasDst == true && test_line.HasPoints == true){
+                    if(test_block instanceof UnitDelay){
+                        UnitDelay x = (UnitDelay)(test_block);
+                        if(x.isBlockMirror() == true){
+                        double[] POINTS = test_line.getPoints();
+                        pane.getChildren().add(new Line(START_POSITION[0],START_POSITION[1]+25,START_POSITION[0]+POINTS[0],START_POSITION[1]+25));
+                        pane.getChildren().add(new Line(START_POSITION[0]+POINTS[0],START_POSITION[1]+25,START_POSITION[0]+POINTS[0],START_POSITION[1]+25+POINTS[3]));
+                        pane.getChildren().add(new Line(START_POSITION[0]+POINTS[0],START_POSITION[1]+25+POINTS[3],END_POSITION[0],START_POSITION[1]+25+POINTS[3]));
+                        }
+                        else
+                        {
+                            //DRAW WITH REGULAR INPUT OUTPUT
+                        }
+                     }                
+                    }
+                //BAD LINES
+                if (test_line.getSrcSID() == test_block.getSID() && test_line.getHasBranch() == true && test_line.HasDst == false)
+                {
+                    START_POSITION = test_block.getPosition();
+                    END_POSITION = test_line.getPoints();
+                    pane.getChildren().add(new Line(START_POSITION[0]+40,START_POSITION[1]+20,START_POSITION[0]+40+END_POSITION[0],START_POSITION[1]+20+END_POSITION[1]));
+                }
             }
         }
+        //BRANCHES GUI
+        
         Scene scene = new Scene(pane,1200,800);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -157,6 +181,7 @@ public class main_test extends Application {
         boolean Dst_Flag_Line = false;
         boolean Points_Flag_Line = false;
         ArrayList<LineBlock> Line_Array = new ArrayList<>();
+        ArrayList<Branch> LineBranchArray = new ArrayList<>();
         
         //BRANCH VARIABLES
         int Zorder_Branch=0;
@@ -211,8 +236,9 @@ public class main_test extends Application {
                     Line_Array.add(new LineBlock(Zorder_Line,Src_Line,Dst_Line,HasBranchWithinLine));
                 }
                 else if(Points_Flag_Line == true && Dst_Flag_Line == false){
-                    Line_Array.add(new LineBlock(Zorder_Line,Src_Line,points_Line,HasBranchWithinLine));
+                    Line_Array.add(new LineBlock(Zorder_Line,Src_Line,points_Line,HasBranchWithinLine,LineBranchArray));
                 }
+                //LineBranchArray.clear();
                 Points_Flag_Line = false;
                 Dst_Flag_Line = false;
                 HasBranchWithinLine = false;
@@ -238,12 +264,17 @@ public class main_test extends Application {
             if(line.matches(".*</Branch>.*")){
                 branch_flag = false;
                 //OBJECT DECLARATION THEN APPEND TO ArrayList<Branch>
+                Branch x_branch;
                 if(Points_Flag_Branch == true){
-                    Branch_Array.add(new Branch(Zorder_Branch,points_Branch,Dst_Branch));
+                    x_branch =new Branch(Zorder_Branch,points_Branch,Dst_Branch);
+                    Branch_Array.add(x_branch);
+                    LineBranchArray.add(x_branch);
                 }
                 else
-                {
-                    Branch_Array.add(new Branch(Dst_Branch,Zorder_Branch));
+                {   
+                    x_branch = new Branch(Dst_Branch,Zorder_Branch);
+                    Branch_Array.add(x_branch);
+                    LineBranchArray.add(x_branch);
                 }
                 Points_Flag_Branch = false;
             }
@@ -682,6 +713,8 @@ public class main_test extends Application {
         int line_count = 0;
         for(LineBlock line:Lines_Array){
             line.print();
+            System.out.println("<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>");
+            line.printBranchesWithinLine();
             line_count ++;
             System.out.println("---------LINE: "+line_count);
         }
