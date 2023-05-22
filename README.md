@@ -24,3 +24,11 @@ Method name | Uses
 drawArrow() | Draws arrows.
 drawBlock() | Draws blocks with specifications.
 ### Classes ###
+![image](https://github.com/rye141200/Advanced-Project-/assets/132165303/7572cfdd-4076-4fb8-80a0-a7e149be7813)
+![image](https://github.com/rye141200/Advanced-Project-/assets/132165303/61b7ebe5-88a1-4054-b6b9-dc77d95ab7b8)
+![image](https://github.com/rye141200/Advanced-Project-/assets/132165303/c1edfcc3-6759-4224-a3a9-ff7d0ee2bf98)
+![image](https://github.com/rye141200/Advanced-Project-/assets/132165303/e1341ee5-f37a-4250-add1-abc6cfecd4c6)
+![image](https://github.com/rye141200/Advanced-Project-/assets/132165303/d2f2563f-a836-4269-93dc-d55d9bea19be)
+![image](https://github.com/rye141200/Advanced-Project-/assets/132165303/a7c2c5e5-258b-4ae8-83fc-fa218e9d9b77)
+![image](https://github.com/rye141200/Advanced-Project-/assets/132165303/30a73111-7458-4065-b693-7cb5a28ed92c)
+![image](https://github.com/rye141200/Advanced-Project-/assets/132165303/72060f39-c054-46f4-8dda-18e3dc6801af)
