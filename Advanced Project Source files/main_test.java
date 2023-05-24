@@ -36,9 +36,13 @@ public class main_test extends Application {
     }
     @Override
     public void start(Stage primaryStage) throws Exception{
-        ArrayList<Block> Blocks_Array = ParseBlocks();
-        ArrayList<LineBlock> Lines_Array = ParseLines();
-        ArrayList<Branch> Branch_Array = ParseBranches();
+        Scanner in = new Scanner(System.in);
+        System.out.println("Please enter the file path: ");
+        String filepath = in.nextLine();
+        in.close();
+        ArrayList<Block> Blocks_Array = ParseBlocks(filepath);
+        ArrayList<LineBlock> Lines_Array = ParseLines(filepath);
+        ArrayList<Branch> Branch_Array = ParseBranches(filepath);
         //CREATING BLOCKS
         Pane pane = new Pane();
         
@@ -226,11 +230,12 @@ public class main_test extends Application {
         }
         Scene scene = new Scene(pane,1200,800);
         primaryStage.setScene(scene);
+        primaryStage.setTitle("SimuLink Parser and GUI");
         primaryStage.show();
     }
     //DONT TOUCH THESE METHODS!!!!
-    public static ArrayList<String> File_Reader() throws Exception{
-        File file = new File("C:\\Users\\hp\\OneDrive\\Desktop\\Advanced Programming project\\Example.mdl");
+    public static ArrayList<String> File_Reader(String filepath) throws Exception{
+        File file = new File(filepath);
         Scanner input = new Scanner(file);
         ArrayList<String> lines = new ArrayList<String>();
         boolean useful_text = false;
@@ -249,8 +254,8 @@ public class main_test extends Application {
             }
         return lines;
     }
-    public static ArrayList<LineBlock> ParseLines() throws Exception{
-        ArrayList<String> lines = File_Reader();
+    public static ArrayList<LineBlock> ParseLines(String filepath) throws Exception{
+        ArrayList<String> lines = File_Reader(filepath);
         //LINE VARIABLES
         int Zorder_Line=0;
         String Src_Line=null;
@@ -359,8 +364,8 @@ public class main_test extends Application {
     }
         return Line_Array;
  }
-     public static ArrayList<Branch> ParseBranches() throws Exception{
-        ArrayList<String> lines = File_Reader();
+     public static ArrayList<Branch> ParseBranches(String filepath) throws Exception{
+        ArrayList<String> lines = File_Reader(filepath);
         //LINE VARIABLES
         int Zorder_Line=0;
         String Src_Line=null;
@@ -460,9 +465,9 @@ public class main_test extends Application {
         }
         return Branch_Array;
     }
-    public static ArrayList<Block> ParseBlocks() throws Exception{
+    public static ArrayList<Block> ParseBlocks(String filepath) throws Exception{
         //GETTING FILE USEFUL CONTENT
-        ArrayList<String> lines = File_Reader();
+        ArrayList<String> lines = File_Reader(filepath);
         //VALID
         //Getting all attributes in, looping:
         //Useful flags for parsing, disables parsing attributes which aren't meant for a specific object 
@@ -781,9 +786,12 @@ public class main_test extends Application {
     }
     
     public static void main(String[] args) throws Exception{
-        ArrayList<Block> Blocks_Array = ParseBlocks();
-        ArrayList<LineBlock> Lines_Array = ParseLines();
-        ArrayList<Branch> Branch_Array = ParseBranches();
+        /*Scanner in = new Scanner(System.in);
+        System.out.println("Please enter the file path: ");
+        String filepath = in.nextLine();
+        ArrayList<Block> Blocks_Array = ParseBlocks(filepath);
+        ArrayList<LineBlock> Lines_Array = ParseLines(filepath);
+        ArrayList<Branch> Branch_Array = ParseBranches(filepath);*/
         //TEST
         /*for(Block block:Blocks_Array){
             block.print();
