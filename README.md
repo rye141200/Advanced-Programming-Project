@@ -7,9 +7,7 @@ attributes from the .mdl file and then displays these blocks in GUI using these 
 1. Download the "Advanced Programming Project" in the GitHub repo.
 2. Make sure your IDE has javafx library installed.
 3. Download the "Example.mdl" file for test causes.
-4. In the "main_test.java" ***line 233*** in the **FileReader()** method update the file directory to the directory of your "Example.mdl" file.
-5. Run the code!
-6. ***Don't forget step 4***
+4. Run the code and follow the program instructions to pass ***file path*** (don't forget to remove the "" when passing the path of Example.mdl)
 ### Documentation ###
 #### Major Parsing Methods ####
 Method name | Uses
